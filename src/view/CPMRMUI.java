@@ -97,16 +97,19 @@ public class CPMRMUI {
 			public void handle(ActionEvent event) {
 				toolBar.getItems().clear();
 
+				Button b0 = new Button("导入国家标准临床路径");
 				Button b1 = new Button("导入数据");
 				Button b2 = new Button("消解同义医嘱");
 				Button b3 = new Button("挖掘关键路径");
 				Button b4 = new Button("医嘱主题聚类");
 
+				toolBar.getItems().add(b0);
 				toolBar.getItems().add(b1);
 				toolBar.getItems().add(b2);
 				toolBar.getItems().add(b3);
 				toolBar.getItems().add(b4);
 
+				importStandardCP(b0);
 				importData(b1);
 				orderReduction(b2);
 				orderAlignment(b3);
@@ -115,8 +118,19 @@ public class CPMRMUI {
 		});
 	}
 
-
 /*	public void importId2Item(Button button) {
+	button.setOnAction(new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent event) {
+
+
+		}
+	});
+}*/
+
+protected void importStandardCP(Button button) {
+		// TODO Auto-generated method stub
+
 		button.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -124,7 +138,10 @@ public class CPMRMUI {
 
 			}
 		});
-	}*/
+	}
+
+
+
 
 
 	public void importData(Button button)  {

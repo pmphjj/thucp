@@ -65,7 +65,7 @@ public class Main extends Application {
 			MenuItem menu11 = new MenuItem("LDA+PM");
 			MenuItem menu12 = new MenuItem("SS-LDA+PM");
 			MenuItem menu13 = new MenuItem("SSS-LDA+PM+SC");
-			
+
 			MenuItem menuwei1 = new MenuItem("LDA+CLUSTER+PM+REPLAY");
 
 			//Options->Submenu 3 submenu
@@ -105,8 +105,7 @@ public class Main extends Application {
 			TCPMUI tcpmUI = new TCPMUI(primaryStage, scene, menu11, toolbar, tabPane, stateLabel);
 
 			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage, scene, menu31, toolbar, tabPane, stateLabel);
-		
-      OutlierDetectionUI outlierDetectionUI = new OutlierDetectionUI(primaryStage, scene, menuwei1, toolbar, tabPane, stateLabel);
+
 
 
 			primaryStage.setScene(scene);
