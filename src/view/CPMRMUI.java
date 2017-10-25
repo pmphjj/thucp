@@ -64,8 +64,10 @@ import javafx.stage.Stage;
 import model.CPMRM.ClinicalOrderReduction;
 import model.CPMRM.DataTranslateToLDA;
 import model.CPMRM.ExcelUtil;
+import model.CPMRM.ImportCPUtil;
 import model.CPMRM.LDACluster;
 import model.CPMRM.MileStoneMiner;
+import model.CPMRM.StandardCPStage;
 
 
 public class CPMRMUI {
@@ -134,7 +136,15 @@ protected void importStandardCP(Button button) {
 		button.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-
+				ImportCPUtil imcp = new ImportCPUtil();
+				StandardCPStage[] CPS;
+				try {
+					CPS = imcp.readJsonInput("./data/CPMRM/test.json");
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		});
