@@ -1,7 +1,26 @@
+<<<<<<< HEAD
 /LICENSE_AGREEMENT_GPL3.txt
 /ca/
 /cc/
 /model/
+=======
+/bsh.jar
+/cc/
+/com/
+/git_import.png
+/hamcrest-core-1.3.jar
+/ivy_lib.png
+/jdom-1.0.jar
+/jgraph-5.13.0.4.jar
+/jgrapht-0.6.0.jar
+/jre_setting.png
+/junit-4.5.jar
+/jwnl-1.3.jar
+/model/
+/mtj-0.9.9.jar
+/thucp_logo.jpg
+/outlier/
+>>>>>>> e3a0ebf2b2600d501941b27fde2e224bdf72ec55
 /test/
 /view/
 /cn/
