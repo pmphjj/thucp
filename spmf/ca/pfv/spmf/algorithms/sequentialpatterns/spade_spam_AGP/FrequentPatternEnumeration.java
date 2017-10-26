@@ -186,13 +186,13 @@ public class FrequentPatternEnumeration {
 //                        if (extension.isSignOfMatchList() == false) continue;
                         extension.setKValue();
                         double kValue = extension.getKValue();
-                        System.out.println(kValue);
+//                        System.out.println(kValue);
 //                        System.out.println(extension.getElements().size()+","+extItemSize+":"+extension.getElements().toString());
                         if (extension.isSignOfMatchList() && extItemSize == stepnumber && kValue > this.maxKValue) {
                         	mileStonesList.clear();
                         	maxKValue = kValue;
                         	mileStonesList.add(extension);
-                        	System.out.println(kValue+":"+extension.toString());
+//                        	System.out.println(kValue+":"+extension.toString());
                         }
                         else if (extension.isSignOfMatchList() && extItemSize == stepnumber && kValue == this.maxKValue) {
                         	mileStonesList.add(extension);
@@ -216,7 +216,7 @@ public class FrequentPatternEnumeration {
                          * parent class that is its prefix
                          */
                         insertClassByPrefix(newEq, child_X, child_Y);
-                        
+
                     }
                 }
             }

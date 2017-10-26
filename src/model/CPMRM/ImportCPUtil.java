@@ -303,7 +303,7 @@ public class ImportCPUtil {
     }
 	public static void main(String[] args) throws Exception {
 
-		//生成标准临床路径的json文件
+     	//生成标准临床路径的json文件
 		ImportCPUtil imcp = new ImportCPUtil();
 		imcp.generate();
 		JSONObject jsonData = imcp.getJsonStages();
