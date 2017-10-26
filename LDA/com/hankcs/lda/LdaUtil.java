@@ -11,7 +11,11 @@
  */
 package com.hankcs.lda;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
+
+import org.netlib.util.doubleW;
 
 /**
  * @author hankcs
@@ -87,9 +91,14 @@ public class LdaUtil
     {
         for (Map.Entry<String, Double> entry : topicMap.entrySet())
         {
-           sr.append(" "+i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+entry.getValue()+"\n");
+        	double p = entry.getValue();
+        	BigDecimal P = new BigDecimal(p);
+        	p = P.setScale(3,BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            sr.append(" "+i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+p+"\t");
             System.out.println(i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+entry.getValue());
         }
+        sr.append("\n");
     }
 
     public static void explain(Map<String, Double>[] result)
