@@ -301,6 +301,9 @@ public class ImportCPUtil {
 		}
 		return CPS;
     }
+
+
+
 	public static void main(String[] args) throws Exception {
 
 		//生成标准临床路径的json文件
@@ -312,6 +315,10 @@ public class ImportCPUtil {
 		//读取json文件
 		StandardCPStage[] CPS;
 		CPS = imcp.readJsonInput("./data/CPMRM/test.json");
+
+		System.out.println(CPS[0].getCoreActivities());
+		System.out.println(CPS[0].getCoreOrders());
+		System.out.println(CPS[0].getCoreServices());
 
 		System.out.println(CPS.length);
 

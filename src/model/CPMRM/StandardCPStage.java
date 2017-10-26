@@ -1,6 +1,8 @@
 package model.CPMRM;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
 
 public class StandardCPStage {
 	public String name; //阶段时间
@@ -18,5 +20,74 @@ public class StandardCPStage {
 		coreOrdersOut = new ArrayList<String>();
 		coreServices = new ArrayList<String>();
 	}
+
+	public String getCoreActivities()
+	{
+		StringBuffer result = new StringBuffer();
+		for(Iterator<String> iterator = coreActivities.iterator();iterator.hasNext();)
+		{
+			result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+        }
+		return result.toString();
+	}
+
+	public String getCoreOrders()
+	{
+		StringBuffer result = new StringBuffer();
+		Iterator<String> iterator = coreOrdersLong.iterator();
+		if(iterator.hasNext())
+		{
+			result.append("长期医嘱\n");
+			for(;iterator.hasNext();)
+			{
+				result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+	        }
+			result.append("\n");
+		}
+		iterator = coreOrdersCur.iterator();
+		if(iterator.hasNext())
+		{
+			result.append("临时医嘱\n");
+			for(;iterator.hasNext();)
+			{
+				result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+	        }
+			result.append("\n");
+		}
+
+		iterator = coreOrdersOut.iterator();
+		if(iterator.hasNext())
+		{
+			result.append("出院医嘱\n");
+			for(;iterator.hasNext();)
+			{
+				result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+	        }
+			result.append("\n");
+		}
+		return result.toString();
+	}
+
+	public String getCoreServices()
+	{
+		StringBuffer result = new StringBuffer();
+		for(Iterator<String> iterator = coreServices.iterator();iterator.hasNext();)
+		{
+			result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 150)+"\n");
+        }
+		return result.toString();
+	}
+
+	public String[] getAllContent()
+	{
+		String[] result = new String[4];
+		result[0] = StringRebuilder.doRebuild(name, 53);
+		result[1] = getCoreActivities();
+		result[2] = getCoreOrders();
+		result[3] = getCoreServices();
+		return result;
+	}
+
+
 
 }
