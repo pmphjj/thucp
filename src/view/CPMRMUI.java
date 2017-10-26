@@ -173,9 +173,24 @@ protected void importStandardCP(Button button) {
 						itemTV.getColumns().add(column);
 					}
 
-					Tab tab0 = new Tab("inputData");
-                    tab0.setContent(itemTV);
-					tabPane.getTabs().add(tab0);
+//					Tab tab0 = new Tab("国家标准临床路径");
+//                  tab0.setContent(itemTV);
+//                  tabPane.getTabs().add(tab0);
+//                  tabPane.getSelectionModel().select(tab0);
+
+					Tab tab0 = null;
+					for (i = 0; i < tabPane.getTabs().size(); i++) {
+						String title = tabPane.getTabs().get(i).getText();
+						if (title.equals("国家标准临床路径")) {
+//							tab0 = tabPane.getTabs().get(i);
+							tabPane.getTabs().remove(i);
+						}
+					}
+					if (tab0 == null) {
+						tab0 = new Tab("国家标准临床路径");
+						tab0.setContent(itemTV);
+						tabPane.getTabs().add(tab0);
+					}
 					tabPane.getSelectionModel().select(tab0);
 
 				} catch (Exception e) {
@@ -222,15 +237,16 @@ protected void importStandardCP(Button button) {
 					for (int i = 0; i < tabPane.getTabs().size(); i++) {
 						String title = tabPane.getTabs().get(i).getText();
 						if (title.equals("inputData")) {
-							tab1 = tabPane.getTabs().get(i);
+//							tab1 = tabPane.getTabs().get(i);
+							tabPane.getTabs().remove(i);
 						}
 					}
 
 					if (tab1 == null) {
 						tab1 = new Tab("inputData");
+						tab1.setContent(itemTV);
+						tabPane.getTabs().add(tab1);
 					}
-					tab1.setContent(itemTV);
-					tabPane.getTabs().add(tab1);
 					tabPane.getSelectionModel().select(tab1);
 					// --
 					stateLabel.setText("类别总数"+":"+rd.showDL()+"  医嘱总数"+":"+rd.showMC());
@@ -251,8 +267,6 @@ protected void importStandardCP(Button button) {
 			@Override
 			public void handle(ActionEvent event) {
 
-
-
 				ClinicalOrderReduction crd = new ClinicalOrderReduction();
 				clinicalOrder = crd.textReduction(clinicalOrder,0.80);
 				clinicalOrder = crd.semanticReduction(clinicalOrder);
@@ -261,17 +275,17 @@ protected void importStandardCP(Button button) {
 				for (int i = 0; i < tabPane.getTabs().size(); i++) {
 					String title = tabPane.getTabs().get(i).getText();
 					if (title.equals("医嘱消解结果")) {
-						tab2 = tabPane.getTabs().get(i);
+//						tab2 = tabPane.getTabs().get(i);
+						tabPane.getTabs().remove(i);
 					}
 				}
 
 				if (tab2 == null) {
 					tab2 = new Tab("医嘱消解结果");
+					Text resulText = new Text(1000,1000,"\n"+crd.getResultBuffer());
+					tab2.setContent(resulText);
+					tabPane.getTabs().add(tab2);
 				}
-				Text resulText = new Text(1000,1000,"\n"+crd.getResultBuffer());
-
-				tab2.setContent(resulText);
-				tabPane.getTabs().add(tab2);
 				tabPane.getSelectionModel().select(tab2);
 
 
@@ -296,17 +310,18 @@ protected void importStandardCP(Button button) {
 					for (int i = 0; i < tabPane.getTabs().size(); i++) {
 						String title = tabPane.getTabs().get(i).getText();
 						if (title.equals("关键路径挖掘结果")) {
-							tab3 = tabPane.getTabs().get(i);
+//							tab3 = tabPane.getTabs().get(i);
+							tabPane.getTabs().remove(i);
 						}
 					}
 
 					if (tab3 == null) {
 						tab3 = new Tab("关键路径挖掘结果");
+						Text resulText = new Text(1000,1000,result.toString());
+						tab3.setContent(resulText);
+						tabPane.getTabs().add(tab3);
 					}
 
-					Text resulText = new Text(1000,1000,result.toString());
-					tab3.setContent(resulText);
-					tabPane.getTabs().add(tab3);
 					tabPane.getSelectionModel().select(tab3);
 
 
@@ -327,7 +342,8 @@ protected void importStandardCP(Button button) {
 				for (int i = 0; i < tabPane.getTabs().size(); i++) {
 					String title = tabPane.getTabs().get(i).getText();
 					if (title.equals("主题聚类结果")) {
-						tab4 = tabPane.getTabs().get(i);
+//						tab4 = tabPane.getTabs().get(i);
+						tabPane.getTabs().remove(i);
 					}
 				}
 

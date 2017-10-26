@@ -55,7 +55,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			VBox vbox = new VBox();
-			vbox.setPrefSize(1000, 800);
+			vbox.setPrefSize(900, 600);
 			vbox.setSpacing(5);
 			vbox.setPadding(new Insets(5, 0, 5, 0));
 			final Label outputLabel = new Label();
