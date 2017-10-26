@@ -140,7 +140,44 @@ protected void importStandardCP(Button button) {
 				StandardCPStage[] CPS;
 				try {
 					CPS = imcp.readJsonInput("./data/CPMRM/test.json");
-					
+
+					final String[] itemHeader = { "时间", "主要诊疗工作","重点医嘱","主要护理工作"};
+
+					TableView<ObservableList<String>> itemTV = new TableView<>();
+					ObservableList<ObservableList<String>> itemData = FXCollections.observableArrayList();
+					int i ;
+					for ( i = 0;i<CPS.length;++i)
+					{
+						itemData.add(FXCollections.observableArrayList(CPS[i].getAllContent()));
+					}
+					itemTV.setItems(itemData);
+					for ( i = 0; i < itemHeader.length; i++) {
+						final int curCol = i;
+						final TableColumn<ObservableList<String>, String> column = new TableColumn<>(itemHeader[curCol]);
+						column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(curCol)));
+						/*if(i == 0)
+						{
+							column.setMinWidth(100);
+						    column.setMaxWidth(100);
+					     }
+						else if(i == 3)
+						{
+							column.setMinWidth(200);
+						    column.setMaxWidth(200);
+						}
+						else {
+							column.setMinWidth(300);
+						    column.setMaxWidth(300);
+						}*/
+						column.setSortable(false);
+						itemTV.getColumns().add(column);
+					}
+
+					Tab tab0 = new Tab("inputData");
+                    tab0.setContent(itemTV);
+					tabPane.getTabs().add(tab0);
+					tabPane.getSelectionModel().select(tab0);
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -169,12 +206,17 @@ protected void importStandardCP(Button button) {
 					}
 					TableView<ObservableList<String>> itemTV = new TableView<>();
 					itemTV.setItems(itemData);
+
 					for (int i = 0; i < itemHeader.length; i++) {
 						final int curCol = i;
 						final TableColumn<ObservableList<String>, String> column = new TableColumn<>(itemHeader[curCol]);
+
 						column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(curCol)));
+
 						itemTV.getColumns().add(column);
+
 					}
+
 
 					Tab tab1 = null;
 					for (int i = 0; i < tabPane.getTabs().size(); i++) {
