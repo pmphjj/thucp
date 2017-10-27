@@ -368,26 +368,19 @@ protected void importStandardCP(Button button) {
 					    lda.cluster(i2cHashMap);
 
 					    resulText = new Text(1000,1000, lda.getResult().toString());
-
-
-
 						stateLabel.setText("CPMRM 已完成!");
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 				}
-
-
 
 				ScrollPane s1 = new ScrollPane();
 				s1.setContent(resulText);
 				tab4.setContent(s1);
-
-
 				tabPane.getTabs().add(tab4);
+
 				tabPane.getSelectionModel().select(tab4);
 
 			}
