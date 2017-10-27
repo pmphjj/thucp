@@ -386,7 +386,6 @@ protected void importStandardCP(Button button) {
 							itemTV.getColumns().add(column);
 						}
 
-
 						ScrollPane s1 = new ScrollPane();
 						s1.setContent(resulText);
 						tab4.setContent(s1);
@@ -397,6 +396,9 @@ protected void importStandardCP(Button button) {
                     catch (Exception e) {
 						e.printStackTrace();
 					}
+
+
+
 				}
 
 
@@ -404,11 +406,15 @@ protected void importStandardCP(Button button) {
 			/*	ScrollPane s1 = new ScrollPane();
 				s1.setContent(resulText);*/
 
+
+
 				tabPane.getTabs().add(tab4);
 				tabPane.getSelectionModel().select(tab4);
 
 			}
-		});
+		}
+		);
 	}
-
 }
+
+
