@@ -155,20 +155,7 @@ protected void importStandardCP(Button button) {
 						final int curCol = i;
 						final TableColumn<ObservableList<String>, String> column = new TableColumn<>(itemHeader[curCol]);
 						column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(curCol)));
-						/*if(i == 0)
-						{
-							column.setMinWidth(100);
-						    column.setMaxWidth(100);
-					     }
-						else if(i == 3)
-						{
-							column.setMinWidth(200);
-						    column.setMaxWidth(200);
-						}
-						else {
-							column.setMinWidth(300);
-						    column.setMaxWidth(300);
-						}*/
+
 						column.setSortable(false);
 						itemTV.getColumns().add(column);
 					}
@@ -351,12 +338,14 @@ protected void importStandardCP(Button button) {
 					tab4 = new Tab("主题聚类结果");
 				}
 
-				Text resulText=null ;
-				if (milestone.size() == 0) {
-					resulText = new Text(1000,1000,"没有找到关键路径，CPMRM已结束！");
+				if (milestone.size() == 0)
+				{
+					Text resulText = new Text(1000,1000,"没有找到关键路径，CPMRM已结束！");
+					tab4.setContent(resulText);
 					System.out.println("没有找到关键路径，CPMRM已结束！");
 				}
-				else {
+				else
+				{
 					HashMap<String, Integer> c2iHashMap = mStoneMiner.getc2iHashMap();
 					HashMap<Integer, String> i2cHashMap = mStoneMiner.geti2cHashMap();
 					HashMap<Integer, String> i2categHashMap = mStoneMiner.geti2categHashMap();
@@ -365,22 +354,57 @@ protected void importStandardCP(Button button) {
 					try {
 						dToLDA = new DataTranslateToLDA(mileStoneInputFile,milestone);
 						LDACluster lda = new LDACluster(dToLDA.getStepNumber(),"./data/CPMRM/orders/eventsInEachStep.txt");
-					    lda.cluster(i2cHashMap);
+						lda.cluster(i2cHashMap);
+					//resulText = new Text(1000,1000, lda.getResult().toString());
 
-					    resulText = new Text(1000,1000, lda.getResult().toString());
+						Text resulText = new Text(1000,1000, lda.getResult().toString());
 						stateLabel.setText("CPMRM 已完成!");
 
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+					//表格展示数据
+						final String[] itemHeader = { "时间", "标准路径表单项","本地化路径挖掘结果"};
+						ImportCPUtil imcp = new ImportCPUtil();
+						StandardCPStage[] CPS = imcp.readJsonInput("./data/CPMRM/test.json");//标准数据读取
+						ArrayList<String> result = lda.getResult();//挖掘结果获取
+
+						TableView<ObservableList<String>> itemTV = new TableView<>();
+						ObservableList<ObservableList<String>> itemData = FXCollections.observableArrayList();
+						int i;
+						for (i = 0;i<CPS.length;++i)
+						{
+							if(i<result.size())
+							   itemData.add(FXCollections.observableArrayList(CPS[i].getName(),CPS[i].getCoreOrdersLongAndOut(),result.get(i)));
+							else
+								 itemData.add(FXCollections.observableArrayList(CPS[i].getName(),CPS[i].getCoreOrdersLongAndOut(),""));
+						}
+						itemTV.setItems(itemData);
+						for ( i = 0; i < itemHeader.length; i++) {
+							final int curCol = i;
+							final TableColumn<ObservableList<String>, String> column = new TableColumn<>(itemHeader[curCol]);
+							column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(curCol)));
+
+							column.setSortable(false);
+							itemTV.getColumns().add(column);
+						}
+
+
+						ScrollPane s1 = new ScrollPane();
+						s1.setContent(resulText);
+						tab4.setContent(s1);
+
+						tab4.setContent(itemTV);
+						stateLabel.setText("CPMRM 已完成!");
+					}
+                    catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 
-				ScrollPane s1 = new ScrollPane();
-				s1.setContent(resulText);
-				tab4.setContent(s1);
-				tabPane.getTabs().add(tab4);
 
+
+			/*	ScrollPane s1 = new ScrollPane();
+				s1.setContent(resulText);*/
+
+				tabPane.getTabs().add(tab4);
 				tabPane.getSelectionModel().select(tab4);
 
 			}
