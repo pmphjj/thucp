@@ -68,6 +68,32 @@ public class StandardCPStage {
 		return result.toString();
 	}
 
+	public String getCoreOrdersLongAndOut()
+	{
+		StringBuffer result = new StringBuffer();
+		Iterator<String> iterator = coreOrdersLong.iterator();
+		if(iterator.hasNext())
+		{
+			result.append("长期医嘱\n");
+			for(;iterator.hasNext();)
+			{
+				result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+	        }
+			result.append("\n");
+		}
+		iterator = coreOrdersOut.iterator();
+		if(iterator.hasNext())
+		{
+			result.append("出院医嘱\n");
+			for(;iterator.hasNext();)
+			{
+				result.append("□ "+StringRebuilder.doRebuildHasSpace(iterator.next(), 200)+"\n");
+	        }
+			result.append("\n");
+		}
+		return result.toString();
+	}
+
 	public String getCoreServices()
 	{
 		StringBuffer result = new StringBuffer();
@@ -86,6 +112,11 @@ public class StandardCPStage {
 		result[2] = getCoreOrders();
 		result[3] = getCoreServices();
 		return result;
+	}
+
+	public String getName()
+	{
+		return StringRebuilder.doRebuild(name, 53);
 	}
 
 

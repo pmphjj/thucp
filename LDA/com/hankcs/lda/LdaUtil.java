@@ -79,7 +79,7 @@ public class LdaUtil
         int i = 0;
         for (Map<String, Double> topicMap : result)
         {
-        	sr.append(" topic "+i+" :\n");
+        	sr.append("□ topic "+(i+1)+" \n");
             System.out.printf("topic %d :\n", i);
             ++i;
             explain(topicMap,i2cHashMap,sr);
@@ -92,11 +92,12 @@ public class LdaUtil
         for (Map.Entry<String, Double> entry : topicMap.entrySet())
         {
         	double p = entry.getValue();
-        	BigDecimal P = new BigDecimal(p);
-        	p = P.setScale(3,BigDecimal.ROUND_HALF_UP).doubleValue();
+      /*  	BigDecimal P = new BigDecimal(p);
+        	p = P.setScale(3,BigDecimal.ROUND_HALF_UP).doubleValue();*/
+            sr.append(" "+i2cHashMap.get(Integer.valueOf(entry.getKey()))+" : "+String.format("%.3f ", entry.getValue())+"  ");
+            System.out.println(i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+String.format("%.3f", entry.getValue()));
+           // System.out.println(i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+p);
 
-            sr.append(" "+i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+p+"\t");
-            System.out.println(i2cHashMap.get(Integer.valueOf(entry.getKey()))+":"+entry.getValue());
         }
         sr.append("\n");
     }

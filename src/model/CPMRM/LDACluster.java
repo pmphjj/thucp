@@ -17,7 +17,7 @@ import com.hankcs.lda.LdaUtil;
 
 public class LDACluster {
 	private int stepNumber;
-	StringBuffer result = new StringBuffer();
+	ArrayList<String> result = new ArrayList<String>();
 	private ArrayList<Integer> eventsInEachStep;
 	private String databaseAddress = "./data/CPMRM/orders/step";
 	public LDACluster(int n, String filename) throws IOException{
@@ -39,8 +39,8 @@ public class LDACluster {
 		String filename = "";
 		for(int i = 1; i <= stepNumber; i++) {
 			filename = this.databaseAddress + String.valueOf(i);
-			result.append(" -----------------------------------   \n");
-			result.append(" 阶段"+i+":\n");
+			//result.append(" -----------------------------------   \n");
+			//result.append(" 阶段"+i+":\n");
 			System.out.println(" -----------------------------------   ");
 			System.out.println("阶段"+i+":");
 			runLDA(filename, this.eventsInEachStep.get(i-1), 5,i2cHashMap);
@@ -60,10 +60,12 @@ public class LDACluster {
     	// 4. phi 矩阵是唯一有用的东西，用 LdaUtil 来展示最终的结果
     	double[][] phi = ldaGibbsSampler.getPhi();
     	Map<String, Double>[] topicMap = LdaUtil.translate(phi, corpus.getVocabulary(), wordNumber);
-    	LdaUtil.explain(topicMap,i2cHashMap,result);
+    	StringBuffer stringBuffer = new StringBuffer();
+    	LdaUtil.explain(topicMap,i2cHashMap,stringBuffer);
+    	result.add(stringBuffer.toString());
     }
 
-    public StringBuffer getResult()
+    public ArrayList<String> getResult()
     {
        return result;
     }
