@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +73,7 @@ import model.CPMRM.ImportCPUtil;
 import model.CPMRM.LDACluster;
 import model.CPMRM.MileStoneMiner;
 import model.CPMRM.StandardCPStage;
-
+import model.CPMRM.DBUtil;
 
 public class CPMRMUI {
 	Stage stage;
@@ -104,18 +109,21 @@ public class CPMRMUI {
 				Button b2 = new Button("消解同义医嘱");
 				Button b3 = new Button("挖掘关键路径");
 				Button b4 = new Button("医嘱主题聚类");
+				Button b5 = new Button("数据库导入数据");
 
 				toolBar.getItems().add(b0);
 				toolBar.getItems().add(b1);
 				toolBar.getItems().add(b2);
 				toolBar.getItems().add(b3);
 				toolBar.getItems().add(b4);
+				toolBar.getItems().add(b5);
 
 				importStandardCP(b0);
 				importData(b1);
 				orderReduction(b2);
 				orderAlignment(b3);
 				orderClustering(b4);
+				importDBData(b5);
 			}
 		});
 	}
@@ -129,6 +137,16 @@ public class CPMRMUI {
 		}
 	});
 }*/
+protected void importDBData(Button button) {
+	button.setOnAction(new EventHandler<ActionEvent>() {
+		public void handle(ActionEvent event) {
+			new DBConnectDialog().display("数据库导入数据", "message");
+
+
+
+		}
+	});
+}
 
 protected void importStandardCP(Button button) {
 		// TODO Auto-generated method stub
