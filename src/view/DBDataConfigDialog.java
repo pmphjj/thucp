@@ -230,7 +230,13 @@ public class DBDataConfigDialog {
 
 
                    //拼出SQL
-	    			String sql = "select "+selectString.toString()+" from "+fromString.toString()+" where "+whereString.toString();    //要执行的SQL
+	    			String sql;
+	    			if (whereString.length() > 0) {
+	    				sql = "select "+selectString.toString()+" from "+fromString.toString()+" where "+whereString.toString();    //要执行的SQL
+					}
+	    			else {
+	    				sql = "select "+selectString.toString()+" from "+fromString.toString();    //要执行的SQL
+					}
 	    			System.out.println(sql);
 	    			Statement stmt;
 	    			 for (String p:prop) {
