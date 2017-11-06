@@ -1,5 +1,9 @@
 package view;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -16,6 +20,7 @@ import java.util.Set;
 import org.netlib.util.intW;
 
 import ca.pfv.spmf.algorithms.classifiers.decisiontree.id3.Node;
+import common.BaseUnit;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,19 +34,25 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.CPMRM.DBUtil;
 
 public class DBDataConfigDialog {
 
@@ -52,6 +63,7 @@ public class DBDataConfigDialog {
 		prop.add("医嘱类型");
 		prop.add("日期");
 	}
+	 int curRows = 1;
 
 	public void display(Connection connection,String title , String message){
 	    Stage window = new Stage();
@@ -61,7 +73,7 @@ public class DBDataConfigDialog {
 	    window.setMinWidth(400);
 	    window.setMinHeight(400);
 
-
+        VBox verticalBox = new VBox();
 	    GridPane grid = new GridPane();
 
 	    grid.setPadding(new Insets(10, 10, 10, 10));
@@ -103,24 +115,75 @@ public class DBDataConfigDialog {
 		  ArrayList<CorrespondChoose> correspondChoosesList = new ArrayList<>();
 		  for (int i = 0; i < prop.size(); i++) {
 		    	Text row = new Text("\t"+prop.get(i)+"\t");
-		 	   // category.setFont(Font.font("黑体", FontWeight.NORMAL, 13));
+		    	// category.setFont(Font.font("黑体", FontWeight.NORMAL, 13));
 		 	    grid.add(row, 0, i+1);
 
 		 	    CorrespondChoose choose = new CorrespondChoose(tablesList,chooseColumn);
-               correspondChoosesList.add(choose);
+		 	    correspondChoosesList.add(choose);
 		 	    grid.add(choose.hBox, 1, i+1);
 
 			}
+		   verticalBox.getChildren().add(grid);
+
+		    //添加条件选择区域
+		   GridPane whereGrid = new GridPane();
+		   whereGrid.setPadding(new Insets(10, 10, 10, 10));
+//		   whereGrid.setGridLinesVisible(true);
+
+		   Text title1 = new Text("\t选择连接条件\t");
+		   title1.setFont(Font.font("黑体", FontWeight.BOLD, 15));
+		   whereGrid.add(title1, 2, 0);
+
+		   ArrayList<ConditionChoose> conditionChoosesList = new ArrayList<ConditionChoose>();
+		   Button insertConditionButton = new Button("添加条件");
+
+		   insertConditionButton.setOnAction(new EventHandler<ActionEvent>() {
+	    		public void handle(ActionEvent event) {
+	    			ConditionChoose condChoose = new ConditionChoose(tablesList, chooseColumn);
+	    			whereGrid.add(condChoose.hBox,0,curRows,3,1);
+	    			conditionChoosesList.add(condChoose);
+	    			Button deleteConditionButton = new Button("删除");
+	    			deleteConditionButton.setOnAction(new EventHandler<ActionEvent>() {
+	    				public void handle(ActionEvent event) {
+	    					int a = whereGrid.getChildren().indexOf(deleteConditionButton);
+	    					int b = whereGrid.getChildren().indexOf(condChoose.hBox);
+	    					whereGrid.getChildren().remove(a);
+	    					whereGrid.getChildren().remove(b);
+	    					conditionChoosesList.remove((b-2)/2);
+	    					//curRows--;
+	    				}
+	    			});
+	    			whereGrid.add(deleteConditionButton,3,curRows);
+	    			curRows++;
+	    		}
+	    	});
+
+		   whereGrid.add(insertConditionButton, 0, 0);
 
 
+		   GridPane centerGrid = new GridPane();
+		   centerGrid.setVgap(10);
 
+		   centerGrid.add(grid, 0, 0);
+		   centerGrid.add(whereGrid, 0, 1);
 
 		    bp.setPadding(new Insets(10, 20, 10, 20));
-	        bp.setCenter(grid);
+	        bp.setCenter(centerGrid);
+
+	        GridPane bottomGrid = new GridPane();
+	        bottomGrid.setHgap(10);
+
+	        Label inputFileLabel = new Label("导入数据名称");
+	        TextField inputFileField = new TextField();
+	        bottomGrid.add(inputFileLabel,0,0);
+	        bottomGrid.add(inputFileField,1,0);
 
 	        Button okButton = new Button("导入数据");
+	        bottomGrid.add(okButton,3,0);
 	        okButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		public void handle(ActionEvent event) {
+
+
 	    			HashSet<String> selectTableSet = new HashSet<String>();
 	    			StringBuffer selectString = new StringBuffer();
 	    			for (int i = 0; i < correspondChoosesList.size(); i++) {
@@ -140,33 +203,100 @@ public class DBDataConfigDialog {
 	    			  else
 	    				  fromString.append(","+it.next());
 	    			}
-                    for (String p:prop) {
-                    	System.out.print(p);
+
+
+                    //判断若》两个表，需有连接条件
+                	if(conditionChoosesList.size()==0&&selectTableSet.size()>=2)
+                	{
+                		Alert alert = new Alert(AlertType.WARNING);
+                		alert.setTitle("警告");
+                		alert.setContentText("请填写连接条件，否则导入数据可能出现错误！");
+
+                		alert.showAndWait();
+                        return;
+                	}
+
+
+                    StringBuffer whereString = new StringBuffer();
+                    j = 0;
+                    for (int i = 0; i < conditionChoosesList.size(); i++) {
+                      if(j == 0)
+                    	  whereString.append(conditionChoosesList.get(i).getCondition());
+   	    			  else
+   	    				whereString.append(" and "+conditionChoosesList.get(i).getCondition());
+                      ++j;
 					}
-                    System.out.println();
+
+
+
                    //拼出SQL
-	    			String sql = "select "+selectString.toString()+" from "+fromString.toString();    //要执行的SQL
+	    			String sql = "select "+selectString.toString()+" from "+fromString.toString()+" where "+whereString.toString();    //要执行的SQL
 	    			System.out.println(sql);
 	    			Statement stmt;
+	    			 for (String p:prop) {
+	                    	System.out.print(p);
+						}
+	                    System.out.println();
 					try {
+						String fileAddress = "./data/tempInput/";
+						String filename;
+						if (inputFileField.getText().isEmpty()) {
+							File folder = new File("./data/tempInput");
+							File[] list = folder.listFiles();
+							filename = fileAddress+"file"+list.length+".txt";
+						} else {
+							filename = fileAddress+inputFileField.getText()+".txt";
+						}
+
+                        File outFile = new File(filename);
+                		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 						stmt = connection.createStatement();
-	                     ResultSet rs = stmt.executeQuery(sql);//创建数据对象
-	                    while (rs.next()){
+	                    ResultSet rs = stmt.executeQuery(sql);//创建数据对象
+	                    while (rs.next()){//1-prop.sieze()
 	                        System.out.print(rs.getString(1) + "\t");
 	                        System.out.print(rs.getString(2) + "\t");
 	                        System.out.print(rs.getString(3) + "\t");
 	                        System.out.print(rs.getString(4) + "\t");
 	                        System.out.println();
+
+	                        StringBuffer seq = new StringBuffer(rs.getString(1));
+	                        for(j = 2; j <= prop.size(); j++) {
+	                				seq.append(",");
+	                				seq.append(rs.getString(j));
+	                		}
+	                		writer.write(seq.toString());
+	                		writer.newLine();
 	                    }
+	                    writer.close();
+
+
+
+	                   // DBUtil.closeConnection(rs, stmt, connection);
 					}catch (SQLException e) {
 						// TODO Auto-generated catch block
+
+						Alert alert = new Alert(AlertType.ERROR);
+                		alert.setTitle("错误");
+                		alert.setContentText("请对所有选择框进行选择");
+                		alert.showAndWait();
+
+						e.printStackTrace();
+					}
+					catch (IOException e) {
+						// TODO Auto-generated catch block
+
+						Alert alert = new Alert(AlertType.ERROR);
+                		alert.setTitle("错误");
+                		alert.setContentText("生成文件出错");
+                		alert.showAndWait();
+
 						e.printStackTrace();
 					}
 
 	    		}
 	    	});
 
-	        bp.setBottom(okButton);
+	        bp.setBottom(bottomGrid);
 
 	    }
 	    catch (SQLException e) {
@@ -204,4 +334,22 @@ class CorrespondChoose {
 	 }
 }
 
+class ConditionChoose {
+
+	 HBox hBox = new HBox();
+	 CorrespondChoose left;
+	 CorrespondChoose right;
+
+	 public ConditionChoose( ObservableList<String> tables, HashMap<String,ObservableList<String>> columns)
+	 {
+		 left = new CorrespondChoose(tables,columns);
+		right = new CorrespondChoose(tables,columns);
+	    Text condition = new Text("\t=\t");
+		hBox.getChildren().addAll(left.hBox,condition,right.hBox);
+
+	 }
+	 public String getCondition(){
+		return left.tableCombo.getValue()+"."+left.columnCombo.getValue()+"="+ right.tableCombo.getValue()+"."+right.columnCombo.getValue();
+	 }
+}
 

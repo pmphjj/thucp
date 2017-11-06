@@ -74,7 +74,7 @@ public class DBConnectDialog {
     topGrid.add(ip, 0, 2);
     TextField ipTextField = new TextField("localhost");
     topGrid.add(ipTextField, 1, 2);
-
+ 
     Label port = new Label("端口:");
     topGrid.add(port, 0, 3);
     TextField portTextField = new TextField("3306");
@@ -117,7 +117,7 @@ public class DBConnectDialog {
 					url = "jdbc:mysql://"+ipTextField.getText()+":"+portTextField.getText()+"/"+dbNameTextField.getText()+"?characterEncoding=utf-8";
 					break;
 				case "SQL Sever":
-					url = "jdbc.sqlserver://"+ipTextField.getText()+":"+portTextField.getText()+";DatabaseName="+dbNameTextField.getText();
+ 					url = "jdbc.sqlserver://"+ipTextField.getText()+":"+portTextField.getText()+";DatabaseName="+dbNameTextField.getText();
 					break;
 				case "Oracle":
 					url = "jdbc:oracle:thin:@"+ipTextField.getText()+":"+portTextField.getText()+":"+dbNameTextField.getText();

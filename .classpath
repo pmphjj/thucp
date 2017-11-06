@@ -11,7 +11,6 @@
 	<classpathentry kind="src" path="lucene"/>
 	<classpathentry kind="src" path="result"/>
 	<classpathentry kind="src" path="spmf"/>
-	<classpathentry kind="src" path="data"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/bsh.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
