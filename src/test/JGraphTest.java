@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-package view;
+package test;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;

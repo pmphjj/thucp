@@ -2,9 +2,10 @@ package outlier.topic;
 
 import java.util.Map;
 
-import com.hankcs.lda.Corpus;
-import com.hankcs.lda.LdaGibbsSampler;
-import com.hankcs.lda.LdaUtil;
+import outlier.lda.com.hankcs.lda.Corpus;
+import outlier.lda.com.hankcs.lda.LdaGibbsSampler;
+import outlier.lda.com.hankcs.lda.LdaUtil;
+import view.InputData;
 
 public class GetTopicBasedOnLDA {
 	public static void main(String[] args) throws Exception{
@@ -32,5 +33,20 @@ public class GetTopicBasedOnLDA {
 //        double[] tp = LdaGibbsSampler.inference(phi, document);
 //        Map<String, Double> topic = LdaUtil.translate(tp, phi, corpus.getVocabulary(), 10);
 //        LdaUtil.explain(topic);
+    }
+	public void lda(Map<String, InputData> dataSet,Integer K) throws Exception
+    {
+        // 1. Load corpus from disk
+        Corpus corpus = Corpus.load(dataSet);
+        // 2. Create a LDA sampler
+        LdaGibbsSampler ldaGibbsSampler = new LdaGibbsSampler(corpus.getDocument(), corpus.getVocabularySize());
+        // 3. Train it
+        ldaGibbsSampler.gibbs(K);
+        // 4. The phi matrix is a LDA model, you can use LdaUtil to explain it.
+        double[][] phi = ldaGibbsSampler.getPhi();
+        Map<String, Double>[] topicMap = LdaUtil.translate(phi, corpus.getVocabulary(), 100000);
+        LdaUtil.explain(topicMap);
+        double[][] theta=ldaGibbsSampler.getTheta();
+        LdaUtil.saveTheta(theta);
     }
 }

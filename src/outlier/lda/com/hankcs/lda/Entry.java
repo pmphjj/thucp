@@ -1,4 +1,4 @@
-package com.hankcs.lda;
+package outlier.lda.com.hankcs.lda;
 
 public class Entry {
 	String name;
