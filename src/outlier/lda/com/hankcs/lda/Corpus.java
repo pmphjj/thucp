@@ -118,7 +118,7 @@ public class Corpus
 			String key=entry.getKey();
 			if(key.contains(".csv")){//只处理csv文件
 				InputData value=entry.getValue();
-				for(InputDataRowType row:value.getData()){
+				for(InputDataRowType row:value.getDataForLog()){
 					String visitId=row.getVisitId();
 					String date=df.format(row.getTime());
 					String event=row.getEvent();

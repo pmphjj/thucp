@@ -352,10 +352,10 @@ public class FuncOutlieDetectionUI {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 		for (Map.Entry<String, InputData> entry : FrameworkMain.paramInputDataSetOfFunc.entrySet()) {
-			String key = entry.getKey();
-			if (key.contains(".csv")) {// 只处理csv文件
+			String type=entry.getValue().type;
+			if (type.equals("log")) {// 只处理日志文件
 				InputData value = entry.getValue();
-				for (InputDataRowType row : value.data) {
+				for (InputDataRowType row : value.dataForLog) {
 					String visitId = row.getVisitId();
 					String date = df.format(row.getTime());
 					String event = row.getEvent();

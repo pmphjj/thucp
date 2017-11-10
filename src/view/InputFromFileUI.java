@@ -105,8 +105,9 @@ public class InputFromFileUI {
 						if (columName2index.containsKey("doctorId"))
 							tempRow.setDoctorId(lines[columName2index.get("doctorId")]);
 
-						fileData.data.add(tempRow);
+						fileData.dataForLog.add(tempRow);
 					}
+					fileData.type="log";
 					FrameworkMain.inputDataSet.put(key, fileData);
 					InputTableController temp = loader.getController();
 					temp.setInputTabPane(inputTabPane);
