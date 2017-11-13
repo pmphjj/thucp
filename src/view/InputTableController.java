@@ -6,16 +6,22 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import test.Student;
 
@@ -86,22 +92,32 @@ public class InputTableController implements Initializable {
 							// clickedStu.getFirstName() +
 							// clickedStu.getLastName() + " 的记录");
 							InputDataStatics ins = new InputDataStatics();
+							SwingNode sn=ins.getStayDistribution(clickedInputData.getKey());
 							Text t = ins.computeStatics(clickedInputData.getKey());
-							ScrollPane sp = new ScrollPane();
-							sp.setContent(t);
-							Tab inputsSatics = null;
+							ScrollPane spText = new ScrollPane();
+							spText.setContent(t);
 							
+							VBox vb = new VBox();
+//							grid.setHgap(10);
+//							grid.setVgap(10);
+//							grid.setPadding(new Insets(20, 150, 10, 10));
+//							grid.setPrefSize(900, 600);
+							vb.getChildren().add(spText);
+							vb.getChildren().add(sn);
+							
+							
+							Tab inputsSatics = null;
 							for (int i = 0; i < inputTabPane.getTabs().size(); i++) {
 								String title = inputTabPane.getTabs().get(i).getText();
 								if (title.equals(clickedInputData.getKey())) {
 									inputsSatics = inputTabPane.getTabs().get(i);
-									inputsSatics.setContent(sp);
+									inputsSatics.setContent(vb);
 									inputTabPane.getSelectionModel().select(inputsSatics);
 								}
 							}
 							if (inputsSatics == null) {
 								inputsSatics = new Tab(clickedInputData.getKey());
-								inputsSatics.setContent(sp);
+								inputsSatics.setContent(vb);
 								inputTabPane.getTabs().add(inputsSatics);
 								inputTabPane.getSelectionModel().select(inputsSatics);
 							}
