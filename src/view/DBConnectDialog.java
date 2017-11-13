@@ -36,6 +36,8 @@ import oracle.jdbc.pool.OracleDataSource;
 
 public class DBConnectDialog {
 
+	String outputFileName = "";
+
 	public static HashMap<String, String> dBDriver = new HashMap<String, String>();
 	static{
 		dBDriver.put("MySQL", "com.mysql.jdbc.Driver");
@@ -135,9 +137,9 @@ public class DBConnectDialog {
 
 				actiontarget.setFill(Color.BLUE);
                 actiontarget.setText("Success");
-
-    			new DBDataConfigDialog().display(connection,"数据库导入数据", "message");
-
+                DBDataConfigDialog dbDataConfigDialog = new DBDataConfigDialog();
+    			dbDataConfigDialog.display(connection,"数据库导入数据", "message");
+    			outputFileName = dbDataConfigDialog.getOutPutFileName();
 			} catch (Exception exception) {
 				// TODO Auto-generated catch block
 				actiontarget.setFill(Color.RED);
@@ -159,4 +161,9 @@ public class DBConnectDialog {
     //使用showAndWait()先处理这个窗口，而如果不处理，main中的那个窗口不能响应
     window.showAndWait();
     }
+
+	public String getOutPutFileName() {
+		// TODO Auto-generated method stub
+		return outputFileName;
+	}
 }

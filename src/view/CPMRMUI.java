@@ -109,21 +109,21 @@ public class CPMRMUI {
 				Button b2 = new Button("消解同义医嘱");
 				Button b3 = new Button("挖掘关键路径");
 				Button b4 = new Button("医嘱主题聚类");
-				Button b5 = new Button("数据库导入数据");
+//				Button b5 = new Button("数据库导入数据");
 
 				toolBar.getItems().add(b0);
 				toolBar.getItems().add(b1);
 				toolBar.getItems().add(b2);
 				toolBar.getItems().add(b3);
 				toolBar.getItems().add(b4);
-				toolBar.getItems().add(b5);
+//				toolBar.getItems().add(b5);
 
 				importStandardCP(b0);
 				importData(b1);
 				orderReduction(b2);
 				orderAlignment(b3);
 				orderClustering(b4);
-				importDBData(b5);
+//				importDBData(b5);
 			}
 		});
 	}

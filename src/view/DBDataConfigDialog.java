@@ -62,15 +62,33 @@ public class DBDataConfigDialog {
 		prop.add("医嘱名称");
 		prop.add("医嘱类型");
 		prop.add("总量");
-		prop.add("单价");
 		prop.add("总价");
 		prop.add("日期");
 		prop.add("疾病编码");
-		prop.add("医疗机构");
+		prop.add("医院编码");
+		prop.add("部门编码");
 		prop.add("医生编码");
 	}
-	 int curRows = 1;
 
+	static Map<String, String> prop_NameMap =  new HashMap<String,String>();
+	static{
+		prop_NameMap.put("病人编码", "visitId");
+		prop_NameMap.put("医嘱名称", "event");
+		prop_NameMap.put("医嘱类型", "eventClass");
+		prop_NameMap.put("总量", "num");
+		prop_NameMap.put("总价", "price");
+		prop_NameMap.put("日期", "time");
+		prop_NameMap.put("疾病编码", "diagnoseId");
+		prop_NameMap.put("医院编码", "hospitalId");
+		prop_NameMap.put("部门编码", "departmentId");
+		prop_NameMap.put("医生编码", "doctorId");
+	}
+	 int curRows = 1;
+	 String outputFileName = "";
+
+	public String getOutPutFileName(){
+		return this.outputFileName;
+	}
 	public void display(Connection connection,String title , String message){
 	    Stage window = new Stage();
 	    window.setTitle(title);
@@ -279,15 +297,26 @@ public class DBDataConfigDialog {
 						}
 
                         File outFile = new File(filename);
+                        outputFileName = filename;
                 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 						stmt = connection.createStatement();
 	                    ResultSet rs = stmt.executeQuery(sql);//创建数据对象
 	                    ArrayList<Integer> selectedColNumber = new ArrayList<Integer>();//记录选择了第几列属性
+	                    StringBuffer s = new StringBuffer();
 	                    for (int i = 0; i < correspondChoosesList.size(); i++) {
 	                    	if (!correspondChoosesList.get(i).tableCombo.getValue().equals("-")) {
 	                    		selectedColNumber.add(i);
+	                    		if(selectedColNumber.size() == 1){
+	                    			s.append(prop_NameMap.get(prop.get(i)));
+	                    		}
+	                    		else {
+	                    			s.append(",");
+	                    			s.append(prop_NameMap.get(prop.get(i)));
+								}
 	                    	}
 	                    }
+	                    writer.write(s.toString());
+                		writer.newLine();
 	                    while (rs.next()){//1-prop.sieze()
 //	                        System.out.print(rs.getString(1) + "\t");
 //	                        System.out.print(rs.getString(2) + "\t");
