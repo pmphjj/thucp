@@ -49,7 +49,7 @@
 	<classpathentry kind="lib" path="lib/json-20171018.jar"/>
 	<classpathentry kind="lib" path="lib/spring-jdbc-5.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.38.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc8_g.jar"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=thucp&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=ivysettings.xml&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles="/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
