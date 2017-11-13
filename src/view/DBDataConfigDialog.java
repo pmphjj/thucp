@@ -70,7 +70,7 @@ public class DBDataConfigDialog {
 	    window.setTitle(title);
 	    //modality要使用Modality.APPLICATION_MODEL
 	    window.initModality(Modality.APPLICATION_MODAL);
-	    window.setMinWidth(400);
+	    window.setMinWidth(500);
 	    window.setMinHeight(400);
 
         VBox verticalBox = new VBox();

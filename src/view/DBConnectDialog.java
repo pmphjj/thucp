@@ -74,7 +74,7 @@ public class DBConnectDialog {
     topGrid.add(ip, 0, 2);
     TextField ipTextField = new TextField("localhost");
     topGrid.add(ipTextField, 1, 2);
- 
+
     Label port = new Label("端口:");
     topGrid.add(port, 0, 3);
     TextField portTextField = new TextField("3306");
@@ -82,7 +82,7 @@ public class DBConnectDialog {
 
     Label dbName = new Label("数据库名:");
     topGrid.add(dbName, 0, 4);
-    TextField dbNameTextField = new TextField("uap");
+    TextField dbNameTextField = new TextField("test1");
     topGrid.add(dbNameTextField, 1, 4);
 
     Label userName = new Label("用户名:");
