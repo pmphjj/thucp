@@ -32,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.CPMRM.DBUtil;
+import oracle.jdbc.pool.OracleDataSource;
 
 public class DBConnectDialog {
 
@@ -66,7 +67,7 @@ public class DBConnectDialog {
     topGrid.add(type, 0, 1);
     ObservableList<String> options = FXCollections.observableArrayList(dBDriver.keySet());
     ComboBox<String> typeCombo = new ComboBox<>(options);
-    typeCombo.setValue("MySQL");
+    typeCombo.setValue("Oracle");
     topGrid.add(typeCombo, 1, 1);
 
 
@@ -77,17 +78,17 @@ public class DBConnectDialog {
 
     Label port = new Label("端口:");
     topGrid.add(port, 0, 3);
-    TextField portTextField = new TextField("3306");
+    TextField portTextField = new TextField("1521");
     topGrid.add(portTextField, 1, 3);
 
     Label dbName = new Label("数据库名:");
     topGrid.add(dbName, 0, 4);
-    TextField dbNameTextField = new TextField("test1");
+    TextField dbNameTextField = new TextField("XE");
     topGrid.add(dbNameTextField, 1, 4);
 
     Label userName = new Label("用户名:");
     topGrid.add(userName, 0, 5);
-    TextField userTextField = new TextField("root");
+    TextField userTextField = new TextField("C##HJJ");
     topGrid.add(userTextField, 1, 5);
 
     Label pw = new Label("密码:");
@@ -127,7 +128,8 @@ public class DBConnectDialog {
 
 
 			try {
-				Connection connection = DBUtil.getConnection(dBDriver.get(typeCombo.getValue()),url,userTextField.getText(),pwBox.getText());
+				Connection connection = null;
+				connection = DBUtil.getConnection(dBDriver.get(typeCombo.getValue()),url,userTextField.getText(),pwBox.getText());
 
 
 

@@ -61,7 +61,13 @@ public class DBDataConfigDialog {
 		prop.add("病人编码");
 		prop.add("医嘱名称");
 		prop.add("医嘱类型");
+		prop.add("总量");
+		prop.add("单价");
+		prop.add("总价");
 		prop.add("日期");
+		prop.add("疾病编码");
+		prop.add("医疗机构");
+		prop.add("医生编码");
 	}
 	 int curRows = 1;
 
@@ -71,7 +77,7 @@ public class DBDataConfigDialog {
 	    //modality要使用Modality.APPLICATION_MODEL
 	    window.initModality(Modality.APPLICATION_MODAL);
 	    window.setMinWidth(500);
-	    window.setMinHeight(400);
+	    window.setMinHeight(500);
 
         VBox verticalBox = new VBox();
 	    GridPane grid = new GridPane();
@@ -95,6 +101,7 @@ public class DBDataConfigDialog {
 		  dbmd = connection.getMetaData();
 		  ResultSet rs = dbmd.getTables(null, "%", "%", new String[] { "TABLE"});
 		  List<String> tableNameList = new ArrayList<String>();
+		  tableNameList.add("-");
 		  while (rs.next()) {
 		     tableNameList.add(rs.getString("TABLE_NAME"));
 		   }
@@ -103,9 +110,12 @@ public class DBDataConfigDialog {
 
 		  ResultSet rs1;
 		  HashMap<String,ObservableList<String>> chooseColumn = new HashMap<String,ObservableList<String>>();
+		  ArrayList<String> columnNameList = new ArrayList<String>();
+		  columnNameList.add(" ");
+		  chooseColumn.put("-", FXCollections.observableArrayList(columnNameList));
 		  for (String str : tableNameList) {
 			    rs1 = dbmd.getColumns(null, "%", str,"%");
-			    ArrayList<String> columnNameList = new ArrayList<String>();
+			    columnNameList = new ArrayList<String>();
 				while (rs1.next()) {
 				   columnNameList.add(rs1.getString("COLUMN_NAME"));
 				}
@@ -134,12 +144,17 @@ public class DBDataConfigDialog {
 		   title1.setFont(Font.font("黑体", FontWeight.BOLD, 15));
 		   whereGrid.add(title1, 2, 0);
 
+		   List<String> newTableNameList = new ArrayList<String>();
+		   for(String str:tableNameList) {
+			   if(str.equals("-")) continue;
+			   newTableNameList.add(str);
+		   }
+		   ObservableList<String>  newTablesList = FXCollections.observableArrayList(newTableNameList);
 		   ArrayList<ConditionChoose> conditionChoosesList = new ArrayList<ConditionChoose>();
 		   Button insertConditionButton = new Button("添加条件");
-
 		   insertConditionButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		public void handle(ActionEvent event) {
-	    			ConditionChoose condChoose = new ConditionChoose(tablesList, chooseColumn);
+	    			ConditionChoose condChoose = new ConditionChoose(newTablesList, chooseColumn);
 	    			whereGrid.add(condChoose.hBox,0,curRows,3,1);
 	    			conditionChoosesList.add(condChoose);
 	    			Button deleteConditionButton = new Button("删除");
@@ -186,18 +201,27 @@ public class DBDataConfigDialog {
 
 	    			HashSet<String> selectTableSet = new HashSet<String>();
 	    			StringBuffer selectString = new StringBuffer();
+	    			int selectCount = 0;
+	    			String tName = new String();
+	    			String cName = new String();
 	    			for (int i = 0; i < correspondChoosesList.size(); i++) {
-
-	    				selectTableSet.add(correspondChoosesList.get(i).tableCombo.getValue());
-	    				if(i == 0)
-	    				 selectString.append(correspondChoosesList.get(i).tableCombo.getValue()+"."+correspondChoosesList.get(i).columnCombo.getValue());
-	    				else
-	    					selectString.append(","+correspondChoosesList.get(i).tableCombo.getValue()+"."+correspondChoosesList.get(i).columnCombo.getValue());
+	    				tName = correspondChoosesList.get(i).tableCombo.getValue();
+	    				cName = correspondChoosesList.get(i).columnCombo.getValue();
+	    				if(tName.equals("-")) continue;
+	    				else {
+		    				selectTableSet.add(tName);
+		    				if(selectCount == 0)
+		    					selectString.append(tName+"."+cName);
+		    				else
+		    					selectString.append(","+tName+"."+cName);
+		    				selectCount++;
+	    				}
 					}
 	    			StringBuffer fromString = new StringBuffer();
 	    			int j = 0;
 	    			for(Iterator it=selectTableSet.iterator();it.hasNext();++j)
 	    			{
+
 	    			  if(j == 0)
 	    			      fromString.append(it.next());
 	    			  else
@@ -206,7 +230,7 @@ public class DBDataConfigDialog {
 
 
                     //判断若》两个表，需有连接条件
-                	if(conditionChoosesList.size()==0&&selectTableSet.size()>=2)
+                	if(conditionChoosesList.size()==0 && selectTableSet.size()>=2)
                 	{
                 		Alert alert = new Alert(AlertType.WARNING);
                 		alert.setTitle("警告");
@@ -240,7 +264,7 @@ public class DBDataConfigDialog {
 	    			System.out.println(sql);
 	    			Statement stmt;
 	    			 for (String p:prop) {
-	                    	System.out.print(p);
+//	                    	System.out.print(p);
 						}
 	                    System.out.println();
 					try {
@@ -258,15 +282,21 @@ public class DBDataConfigDialog {
                 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 						stmt = connection.createStatement();
 	                    ResultSet rs = stmt.executeQuery(sql);//创建数据对象
+	                    ArrayList<Integer> selectedColNumber = new ArrayList<Integer>();//记录选择了第几列属性
+	                    for (int i = 0; i < correspondChoosesList.size(); i++) {
+	                    	if (!correspondChoosesList.get(i).tableCombo.getValue().equals("-")) {
+	                    		selectedColNumber.add(i);
+	                    	}
+	                    }
 	                    while (rs.next()){//1-prop.sieze()
-	                        System.out.print(rs.getString(1) + "\t");
-	                        System.out.print(rs.getString(2) + "\t");
-	                        System.out.print(rs.getString(3) + "\t");
-	                        System.out.print(rs.getString(4) + "\t");
-	                        System.out.println();
+//	                        System.out.print(rs.getString(1) + "\t");
+//	                        System.out.print(rs.getString(2) + "\t");
+//	                        System.out.print(rs.getString(3) + "\t");
+//	                        System.out.print(rs.getString(4) + "\t");
+//	                        System.out.println();
 
 	                        StringBuffer seq = new StringBuffer(rs.getString(1));
-	                        for(j = 2; j <= prop.size(); j++) {
+	                        for(j = 2; j <= selectedColNumber.size(); j++) {
 	                				seq.append(",");
 	                				seq.append(rs.getString(j));
 	                		}
@@ -336,6 +366,10 @@ class CorrespondChoose {
 		 tableCombo.setOnAction(ev -> {
 	         columnCombo.setItems(columns.get(tableCombo.getValue()));
 	        });
+		 if (tables.contains("-")) {
+			 tableCombo.setValue("-");
+		 }
+
 		 hBox.getChildren().addAll(tableCombo,columnCombo);
 	 }
 }

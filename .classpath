@@ -49,6 +49,7 @@
 	<classpathentry kind="lib" path="lib/json-20171018.jar"/>
 	<classpathentry kind="lib" path="lib/spring-jdbc-5.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.38.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc8.jar"/>
 	<classpathentry kind="lib" path="lib/Animation-latest.jar"/>
 	<classpathentry kind="lib" path="lib/ant-1.9.4.jar"/>
 	<classpathentry kind="lib" path="lib/antlr4-runtime-4.5.jar"/>
