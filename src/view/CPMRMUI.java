@@ -142,8 +142,6 @@ protected void importDBData(Button button) {
 		public void handle(ActionEvent event) {
 			new DBConnectDialog().display("数据库导入数据", "message");
 
-
-
 		}
 	});
 }

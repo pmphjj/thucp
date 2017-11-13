@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="461.0" prefWidth="489.0" stylesheets="@Fxtable.css"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<TableView fx:id="funcParamInputTable" layoutY="54.0" prefHeight="407.0"
+			prefWidth="402.0" AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			AnchorPane.topAnchor="1.0">
+			<columns>
+				<TableColumn fx:id="key" prefWidth="300.0" text="已导入数据" />
+				<TableColumn fx:id="isSelected" prefWidth="100.0" text="是否选择" />
+			</columns>
+		</TableView>
+	</children>
+</AnchorPane>
