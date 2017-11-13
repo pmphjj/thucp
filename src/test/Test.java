@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import outlier.launch.AlignLaunch;
+
 //import org.deckfour.xes.in.XParser;
 //import org.deckfour.xes.in.XesXmlParser;
 //import org.deckfour.xes.model.XLog;
@@ -24,6 +26,7 @@ public class Test extends JFrame{
 	}
 
 	public void init() throws Exception {
+		AlignLaunch.lauch("data/OutlierDetection/cluster/paper.csv");
 //		File file = new File("D:/result.xes");
 //		XParser x = new XesXmlParser();
 //		boolean flag = x.canParse(file);
