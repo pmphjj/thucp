@@ -117,7 +117,7 @@ public class FrameworkMain extends Application {
 			funVbox.getChildren().add(funcMenuBar);
 			funVbox.getChildren().add(funcTabPane);
 			FuncOutlieDetectionUI funcOutlieDetectionUI = new FuncOutlieDetectionUI(primaryStage,menuwei1,funcTabPane);
-//			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage, scene, menu31, toolbar, tabPane, stateLabel);
+			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage,  menu31, tabPane);
 
 			Tab output = new Tab("    output    ");
 			output.closableProperty().set(false);

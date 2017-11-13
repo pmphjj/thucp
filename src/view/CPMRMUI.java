@@ -128,6 +128,26 @@ public class CPMRMUI {
 		});
 	}
 
+	public CPMRMUI(Stage stage, MenuItem menuItem, TabPane tabPane) {
+		this.stage = stage;
+		this.menuItem = menuItem;
+		this.tabPane = tabPane;
+
+
+		menuItem.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					new FuncParamInputDataSetDialog().setParamInputDataSet();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//				importDBData(b5);
+			}
+		});
+	}
+
 /*	public void importId2Item(Button button) {
 	button.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
