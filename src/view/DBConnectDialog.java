@@ -140,6 +140,7 @@ public class DBConnectDialog {
                 DBDataConfigDialog dbDataConfigDialog = new DBDataConfigDialog();
     			dbDataConfigDialog.display(connection,"数据库导入数据", "message");
     			outputFileName = dbDataConfigDialog.getOutPutFileName();
+    			window.close();
 			} catch (Exception exception) {
 				// TODO Auto-generated catch block
 				actiontarget.setFill(Color.RED);

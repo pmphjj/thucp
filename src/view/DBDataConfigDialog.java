@@ -335,7 +335,7 @@ public class DBDataConfigDialog {
 	                    writer.close();
 
 
-
+	                    window.close();
 	                   // DBUtil.closeConnection(rs, stmt, connection);
 					}catch (SQLException e) {
 						// TODO Auto-generated catch block
