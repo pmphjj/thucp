@@ -9,6 +9,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,11 +87,12 @@ public class DBDataConfigDialog {
 	}
 	 int curRows = 1;
 	 String outputFileName = "";
+	 InputData inputData;
 
 	public String getOutPutFileName(){
 		return this.outputFileName;
 	}
-	public void display(Connection connection,String title , String message){
+	public void display(Connection connection,String title , String message, String databaseType, String userName){
 	    Stage window = new Stage();
 	    window.setTitle(title);
 	    //modality要使用Modality.APPLICATION_MODEL
@@ -111,35 +114,39 @@ public class DBDataConfigDialog {
 	    Text chartTitle = new Text("\t数据库表及对应列选择\t");
 	    chartTitle.setFont(Font.font("黑体", FontWeight.BOLD, 15));
 	    grid.add(chartTitle, 1, 0);
-
 	    BorderPane bp = new BorderPane();
 	    //查询数据库表和列
 	    try {
 	      DatabaseMetaData dbmd;
 		  dbmd = connection.getMetaData();
-		  ResultSet rs = dbmd.getTables(null, "%", "%", new String[] { "TABLE"});
+		  System.out.println("2");
+		  String schema = "%";
+		  if (databaseType.equals("Oracle")) {
+			  schema = userName.toUpperCase();
+		  }
+		  ResultSet rs = dbmd.getTables(connection.getCatalog(), schema, null, new String[] { "TABLE"});// 2,null - "%"
+		  System.out.println("3");
 		  List<String> tableNameList = new ArrayList<String>();
 		  tableNameList.add("-");
 		  while (rs.next()) {
 		     tableNameList.add(rs.getString("TABLE_NAME"));
 		   }
 		  ObservableList<String>  tablesList = FXCollections.observableArrayList(tableNameList);
-
-
-		  ResultSet rs1;
+		  System.out.println("4");
+		  ResultSet rs1 = null;
 		  HashMap<String,ObservableList<String>> chooseColumn = new HashMap<String,ObservableList<String>>();
 		  ArrayList<String> columnNameList = new ArrayList<String>();
 		  columnNameList.add(" ");
 		  chooseColumn.put("-", FXCollections.observableArrayList(columnNameList));
 		  for (String str : tableNameList) {
-			    rs1 = dbmd.getColumns(null, "%", str,"%");
+			    rs1 = dbmd.getColumns(null, schema, str,null);
 			    columnNameList = new ArrayList<String>();
 				while (rs1.next()) {
 				   columnNameList.add(rs1.getString("COLUMN_NAME"));
 				}
 				chooseColumn.put(str, FXCollections.observableArrayList(columnNameList));
 	       }
-
+		  System.out.println("5");
 		  ArrayList<CorrespondChoose> correspondChoosesList = new ArrayList<>();
 		  for (int i = 0; i < prop.size(); i++) {
 		    	Text row = new Text("\t"+prop.get(i)+"\t");
@@ -193,7 +200,6 @@ public class DBDataConfigDialog {
 
 		   whereGrid.add(insertConditionButton, 0, 0);
 
-
 		   GridPane centerGrid = new GridPane();
 		   centerGrid.setVgap(10);
 
@@ -216,6 +222,13 @@ public class DBDataConfigDialog {
 	        okButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		public void handle(ActionEvent event) {
 
+	    			if (inputFileField.getText().isEmpty()) {
+	    				Alert alert = new Alert(AlertType.ERROR);
+                		alert.setTitle("错误");
+                		alert.setContentText("请输入数据名称");
+                		alert.showAndWait();
+					}
+	    			else {
 
 	    			HashSet<String> selectTableSet = new HashSet<String>();
 	    			StringBuffer selectString = new StringBuffer();
@@ -246,7 +259,6 @@ public class DBDataConfigDialog {
 	    				  fromString.append(","+it.next());
 	    			}
 
-
                     //判断若》两个表，需有连接条件
                 	if(conditionChoosesList.size()==0 && selectTableSet.size()>=2)
                 	{
@@ -258,7 +270,6 @@ public class DBDataConfigDialog {
                         return;
                 	}
 
-
                     StringBuffer whereString = new StringBuffer();
                     j = 0;
                     for (int i = 0; i < conditionChoosesList.size(); i++) {
@@ -268,8 +279,6 @@ public class DBDataConfigDialog {
    	    				whereString.append(" and "+conditionChoosesList.get(i).getCondition());
                       ++j;
 					}
-
-
 
                    //拼出SQL
 	    			String sql;
@@ -281,62 +290,124 @@ public class DBDataConfigDialog {
 					}
 	    			System.out.println(sql);
 	    			Statement stmt;
-	    			 for (String p:prop) {
-//	                    	System.out.print(p);
-						}
-	                    System.out.println();
+//	    			for (String p:prop) {
+//	                    System.out.print(p);
+//					}
 					try {
-						String fileAddress = "./data/tempInput/";
-						String filename;
-						if (inputFileField.getText().isEmpty()) {
-							File folder = new File("./data/tempInput");
-							File[] list = folder.listFiles();
-							filename = fileAddress+"file"+list.length+".txt";
-						} else {
-							filename = fileAddress+inputFileField.getText()+".txt";
+						/*
+						 * 结果写入文件
+						 *
+						 */
+//						String fileAddress = "./data/tempInput/";
+//						String filename;
+//						if (inputFileField.getText().isEmpty()) {
+//							File folder = new File("./data/tempInput");
+//							File[] list = folder.listFiles();
+//							filename = fileAddress+"file"+list.length+".txt";
+//						} else {
+//							filename = fileAddress+inputFileField.getText()+".txt";
+//						}
+//
+//                      File outFile = new File(filename);
+//                      outputFileName = filename;
+//                		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+//						stmt = connection.createStatement();
+//	                    ResultSet rs = stmt.executeQuery(sql);//创建数据对象
+//	                    ArrayList<Integer> selectedColNumber = new ArrayList<Integer>();//记录选择了第几列属性
+//	                    StringBuffer s = new StringBuffer();
+//	                    for (int i = 0; i < correspondChoosesList.size(); i++) {
+//	                    	if (!correspondChoosesList.get(i).tableCombo.getValue().equals("-")) {
+//	                    		selectedColNumber.add(i);
+//	                    		if(selectedColNumber.size() == 1){
+//	                    			s.append(prop_NameMap.get(prop.get(i)));
+//	                    		}
+//	                    		else {
+//	                    			s.append(",");
+//	                    			s.append(prop_NameMap.get(prop.get(i)));
+//								}
+//	                    	}
+//	                    }
+//	                    writer.write(s.toString());
+//                		writer.newLine();
+//	                    while (rs.next()){//1-prop.sieze()
+////	                        System.out.print(rs.getString(1) + "\t");
+////	                        System.out.print(rs.getString(2) + "\t");
+////	                        System.out.print(rs.getString(3) + "\t");
+////	                        System.out.print(rs.getString(4) + "\t");
+////	                        System.out.println();
+//
+//	                        StringBuffer seq = new StringBuffer(rs.getString(1));
+//	                        for(j = 2; j <= selectedColNumber.size(); j++) {
+//	                				seq.append(",");
+//	                				seq.append(rs.getString(j));
+//	                		}
+//	                		writer.write(seq.toString());
+//	                		writer.newLine();
+//	                    }
+//	                    writer.close();
+						inputData = new InputData();
+						FrameworkMain.indexInputData++;
+						String inputName = "temp";
+						if (!inputFileField.getText().isEmpty()) {
+							inputName = inputFileField.getText();
 						}
-
-                        File outFile = new File(filename);
-                        outputFileName = filename;
-                		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+						inputData.setKey(inputName);
 						stmt = connection.createStatement();
 	                    ResultSet rs = stmt.executeQuery(sql);//创建数据对象
 	                    ArrayList<Integer> selectedColNumber = new ArrayList<Integer>();//记录选择了第几列属性
+	                    Map<String, Integer> columName2index = new HashMap<String, Integer>();
 	                    StringBuffer s = new StringBuffer();
+	                    int index = 1;
 	                    for (int i = 0; i < correspondChoosesList.size(); i++) {
 	                    	if (!correspondChoosesList.get(i).tableCombo.getValue().equals("-")) {
 	                    		selectedColNumber.add(i);
-	                    		if(selectedColNumber.size() == 1){
-	                    			s.append(prop_NameMap.get(prop.get(i)));
-	                    		}
-	                    		else {
-	                    			s.append(",");
-	                    			s.append(prop_NameMap.get(prop.get(i)));
-								}
+	                    		columName2index.put(prop_NameMap.get(prop.get(i)), index++);
 	                    	}
 	                    }
-	                    writer.write(s.toString());
-                		writer.newLine();
+	                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	                    while (rs.next()){//1-prop.sieze()
-//	                        System.out.print(rs.getString(1) + "\t");
-//	                        System.out.print(rs.getString(2) + "\t");
-//	                        System.out.print(rs.getString(3) + "\t");
-//	                        System.out.print(rs.getString(4) + "\t");
-//	                        System.out.println();
+	                    	InputDataRowType tempRow = new InputDataRowType();
+                        	if (columName2index.containsKey("visitId")){
+    							System.out.println(rs.getString(columName2index.get("visitId")));
+    							tempRow.setVisitId(rs.getString(columName2index.get("visitId")));
+    						}
 
-	                        StringBuffer seq = new StringBuffer(rs.getString(1));
-	                        for(j = 2; j <= selectedColNumber.size(); j++) {
-	                				seq.append(",");
-	                				seq.append(rs.getString(j));
-	                		}
-	                		writer.write(seq.toString());
-	                		writer.newLine();
+    						if (columName2index.containsKey("event"))
+    							tempRow.setEvent(rs.getString(columName2index.get("event")));
+
+    						if (columName2index.containsKey("eventClass"))
+    							tempRow.setEventClass(rs.getString(columName2index.get("eventClass")));
+
+    						if (columName2index.containsKey("num"))
+    							tempRow.setNum(Double.parseDouble(rs.getString(columName2index.get("num"))));
+
+    						if (columName2index.containsKey("price"))
+    							tempRow.setPrice(Double.parseDouble(rs.getString(columName2index.get("price"))));
+
+    						if (columName2index.containsKey("time"))
+    							tempRow.setTime(df.parse(rs.getString(columName2index.get("time"))));
+
+    						if (columName2index.containsKey("diagnoseId"))
+    							tempRow.setDiagnoseId(rs.getString(columName2index.get("diagnoseId")));
+
+    						if (columName2index.containsKey("hospitalId"))
+    							tempRow.setHospitalId(rs.getString(columName2index.get("hospitalId")));
+
+    						if (columName2index.containsKey("departmentId"))
+    							tempRow.setDepartmentId(rs.getString(columName2index.get("departmentId")));
+
+    						if (columName2index.containsKey("doctorId"))
+    							tempRow.setDoctorId(rs.getString(columName2index.get("doctorId")));
+    						inputData.dataForLog.add(tempRow);
 	                    }
-	                    writer.close();
+	                    inputData.type="log";
+						FrameworkMain.inputDataSet.put(inputName, inputData);
 
+						DBUtil.closeConnection(rs, stmt, connection);
+//						DBUtil.closeResultSet(rs);
+//						DBUtil.closeStatement(stmt);
 
 	                    window.close();
-	                   // DBUtil.closeConnection(rs, stmt, connection);
 					}catch (SQLException e) {
 						// TODO Auto-generated catch block
 
@@ -347,17 +418,28 @@ public class DBDataConfigDialog {
 
 						e.printStackTrace();
 					}
-					catch (IOException e) {
+					catch (ParseException e) {
 						// TODO Auto-generated catch block
 
 						Alert alert = new Alert(AlertType.ERROR);
                 		alert.setTitle("错误");
-                		alert.setContentText("生成文件出错");
+                		alert.setContentText("输入的时间格式有误");
                 		alert.showAndWait();
 
 						e.printStackTrace();
 					}
+//					catch (IOException e) {
+//						// TODO Auto-generated catch block
+//
+//						Alert alert = new Alert(AlertType.ERROR);
+//                		alert.setTitle("错误");
+//                		alert.setContentText("生成文件出错");
+//                		alert.showAndWait();
+//
+//						e.printStackTrace();
+//					}
 
+	    			}
 	    		}
 	    	});
 
@@ -369,15 +451,11 @@ public class DBDataConfigDialog {
 			e.printStackTrace();
 		}
 
-
-
-
-
-
 	    Scene scene = new Scene(bp);
 	    window.setScene(scene);
 	    //使用showAndWait()先处理这个窗口，而如果不处理，main中的那个窗口不能响应
 	    window.showAndWait();
+//	    DBUtil.closeConnection(connection);
 	}
 
 }

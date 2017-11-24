@@ -69,7 +69,7 @@ public class FrameworkMain extends Application {
 			// 为表格设置控制器
 			loader.setController(new InputTableController());
 			AnchorPane tableViewPane = loader.load();
-			tableViewPane.setPadding(new Insets(5, 500, 5, 500));
+			tableViewPane.setPadding(new Insets(5, 300, 5, 300));
 //			tableViewPane.setPrefSize(1000, 1000);
 //			tableViewPane.autosize();
 			TabPane inputTabPane = new TabPane();

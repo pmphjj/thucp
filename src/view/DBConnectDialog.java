@@ -3,6 +3,8 @@ package view;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class DBConnectDialog {
 	public static HashMap<String, String> dBDriver = new HashMap<String, String>();
 	static{
 		dBDriver.put("MySQL", "com.mysql.jdbc.Driver");
-		dBDriver.put("SQL Sever", "Servercom.microsoft.sqlserver.jdbc.SQLServerDriver");
+//		dBDriver.put("SQL Sever", "Servercom.microsoft.sqlserver.jdbc.SQLServerDriver");
 		dBDriver.put("Oracle", "oracle.jdbc.driver.OracleDriver");
 	}
 
@@ -85,12 +87,12 @@ public class DBConnectDialog {
 
     Label dbName = new Label("数据库名:");
     topGrid.add(dbName, 0, 4);
-    TextField dbNameTextField = new TextField("XE");
+    TextField dbNameTextField = new TextField("orcl");
     topGrid.add(dbNameTextField, 1, 4);
 
     Label userName = new Label("用户名:");
     topGrid.add(userName, 0, 5);
-    TextField userTextField = new TextField("C##HJJ");
+    TextField userTextField = new TextField("");
     topGrid.add(userTextField, 1, 5);
 
     Label pw = new Label("密码:");
@@ -131,15 +133,14 @@ public class DBConnectDialog {
 
 			try {
 				Connection connection = null;
+				System.out.println(url);
 				connection = DBUtil.getConnection(dBDriver.get(typeCombo.getValue()),url,userTextField.getText(),pwBox.getText());
-
-
-
+				System.out.println("1");
 				actiontarget.setFill(Color.BLUE);
                 actiontarget.setText("Success");
                 DBDataConfigDialog dbDataConfigDialog = new DBDataConfigDialog();
-    			dbDataConfigDialog.display(connection,"数据库导入数据", "message");
-    			outputFileName = dbDataConfigDialog.getOutPutFileName();
+    			dbDataConfigDialog.display(connection,"数据库导入数据", "message",typeCombo.getValue(),userTextField.getText());
+//    			outputFileName = dbDataConfigDialog.getOutPutFileName();
     			window.close();
 			} catch (Exception exception) {
 				// TODO Auto-generated catch block
@@ -167,4 +168,44 @@ public class DBConnectDialog {
 		// TODO Auto-generated method stub
 		return outputFileName;
 	}
+
+	public static void main(String[] args) {
+		Connection con = null;// 创建一个数据库连接
+	    PreparedStatement pre = null;// 创建预编译语句对象，一般都是用这个而不用Statement
+	    ResultSet result = null;// 创建一个结果集对象
+	    try
+	    {
+	        Class.forName("oracle.jdbc.driver.OracleDriver");// 加载Oracle驱动程序
+	        System.out.println("开始尝试连接数据库！");
+	        String url = "jdbc:oracle:" + "thin:@localhost:1521:orcl";// 127.0.0.1是本机地址，XE是精简版Oracle的默认数据库名
+	        String user = "C##HJJ";// 用户名,系统默认的账户名
+	        String password = "admin";// 你安装时选设置的密码
+	        con = DriverManager.getConnection(url, user, password);// 获取连接
+	        System.out.println("连接成功！");
+	    }
+	    catch (Exception e)
+	    {
+	        e.printStackTrace();
+	    }
+	    finally
+	    {
+	        try
+	        {
+	            // 逐一将上面的几个对象关闭，因为不关闭的话会影响性能、并且占用资源
+	            // 注意关闭的顺序，最后使用的最先关闭
+	            if (result != null)
+	                result.close();
+	            if (pre != null)
+	                pre.close();
+	            if (con != null)
+	                con.close();
+	            System.out.println("数据库连接已关闭！");
+	        }
+	        catch (Exception e)
+	        {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 }
