@@ -210,7 +210,7 @@ public class FuncOutlieDetectionUI {
 			funcTabPane.getTabs().add(alignPan);
 			funcTabPane.getSelectionModel().select(alignPan);
 		}
-		
+
 	}
 
 	public void runKmeansPlusPlus() {
@@ -321,7 +321,7 @@ public class FuncOutlieDetectionUI {
 				funcTabPane.getTabs().add(tabCluster2items);
 				funcTabPane.getSelectionModel().select(tabCluster2items);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -442,7 +442,7 @@ public class FuncOutlieDetectionUI {
 			funcTabPane.getTabs().add(tab1);
 			funcTabPane.getSelectionModel().select(tab1);
 		}
-		
+
 
 		ArrayList<String[]> doc2Topic = new ArrayList<String[]>();
 		String doc2TopicFilePath = "data/OutlierDetection/topic/doc2topics/docToTopic.csv";
@@ -481,7 +481,7 @@ public class FuncOutlieDetectionUI {
 			funcTabPane.getTabs().add(tab2);
 			funcTabPane.getSelectionModel().select(tab1);
 		}
-		
+
 	}
 
 	public void loadTopic2Items(ArrayList<String[]> topicId2ItemsArray, String topicFilePath) {

@@ -146,6 +146,7 @@ public class CPMRMUI {
 					new FuncParamInputDataSetDialog().setParamInputDataSet();
 
 					System.out.println(FrameworkMain.paramInputDataSetOfFunc.size());
+
 					if(FrameworkMain.paramInputDataSetOfFunc.size() > 0){
 						Iterator<Entry<String,InputData>> iter = FrameworkMain.paramInputDataSetOfFunc.entrySet().iterator();
 						StandardCPStage[] CPS = null;

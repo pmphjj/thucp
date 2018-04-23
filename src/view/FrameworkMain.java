@@ -64,6 +64,7 @@ public class FrameworkMain extends Application {
 			Menu importMenu = new Menu("导入");
 			importMenu.getItems().addAll(menuFile, menuDataBase);
 			inputMenuBar.getMenus().add(importMenu);
+//			importMenu.setTooltip();
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(this.getClass().getResource("InputDataSetTable.fxml"));
 			// 为表格设置控制器
@@ -117,7 +118,7 @@ public class FrameworkMain extends Application {
 			funVbox.getChildren().add(funcMenuBar);
 			funVbox.getChildren().add(funcTabPane);
 			FuncOutlieDetectionUI funcOutlieDetectionUI = new FuncOutlieDetectionUI(primaryStage,menuwei1,funcTabPane);
-			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage,  menu31, tabPane);
+			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage,  menu31, funcTabPane);
 
 			Tab output = new Tab("    output    ");
 			output.closableProperty().set(false);

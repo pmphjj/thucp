@@ -100,7 +100,10 @@ public class InputFromFileUI {
 					fileChooser.setTitle("选择国家标准临床路径");
 					File file = fileChooser.showOpenDialog(stage);
 					// System.out.println(file.getAbsolutePath());
-
+					if (file == null) {
+						System.out.println("没有选择CP文件");
+						return;
+					}
 						InputData fileData = new InputData();
 						FrameworkMain.indexInputData++;
 						String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
@@ -126,7 +129,10 @@ public class InputFromFileUI {
 					File file = fileChooser.showOpenDialog(stage);
 					// System.out.println(file.getAbsolutePath());
 					try {
-						if(file == null) return;
+						if(file == null) {
+							System.out.println("没有选择LOG文件");
+							return;
+						}
 						InputData fileData = new InputData();
 						FrameworkMain.indexInputData++;
 						String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
