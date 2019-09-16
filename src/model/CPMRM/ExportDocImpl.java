@@ -27,7 +27,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.netlib.util.intW;
 
 
 /**
@@ -57,7 +56,7 @@ public class ExportDocImpl {
 //		test.translateToJson(filePath2);
 
 		ImportCPUtil imcp = new ImportCPUtil();
-		String filePath = filePath9;
+		String filePath = filePath8;
 		//读.docx
 //		JSONObject jobj =  test.translateToJson(filePath);
 //		String jsonFileName = filePath.substring(0, filePath.length()-4)+"json";
@@ -66,7 +65,7 @@ public class ExportDocImpl {
 //		else
 //			System.out.println("haha");
 //		读.doc
-//		JSONObject jobj =  test.translateToJson(filePath);
+		JSONObject jobj =  test.translateToJson(filePath);
 //		String jsonFileName = filePath.substring(0, filePath.length()-3)+"json";
 //		if (jobj != null && jobj.length() != 0)
 //			imcp.writeFile(jsonFileName, jobj.toString());
@@ -187,6 +186,7 @@ public class ExportDocImpl {
 
 	public JSONObject translateToJson(String filePath){
 		  try{
+			 System.out.println("转换为json");
 		     FileInputStream in = new FileInputStream(filePath);//载入文档
 		     JSONObject jsonObjDay = new JSONObject();//创建json格式的数据;//创建json格式的数据
 		     //如果是office2007  docx格式

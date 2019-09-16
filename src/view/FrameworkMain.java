@@ -100,7 +100,9 @@ public class FrameworkMain extends Application {
 			menu2.getItems().add(menuwei1);
 			Menu menu3 = new Menu("3.本地化临床路径模型设计");
 			MenuItem menu31 = new MenuItem("CPMRM");
+			MenuItem menu32 = new MenuItem("CPCGA");
 			menu3.getItems().addAll(menu31);
+			menu3.getItems().addAll(menu32);
 			Menu menu4 = new Menu("4.合规性度量");
 			Menu menu5 = new Menu("5.后续路径推荐");
 			Menu menu6 = new Menu("6.诊疗过程比较");
@@ -119,6 +121,7 @@ public class FrameworkMain extends Application {
 			funVbox.getChildren().add(funcTabPane);
 			FuncOutlieDetectionUI funcOutlieDetectionUI = new FuncOutlieDetectionUI(primaryStage,menuwei1,funcTabPane);
 			CPMRMUI cpmrmUI = new CPMRMUI(primaryStage,  menu31, funcTabPane);
+			CPCGAUI cpcgaUI = new CPCGAUI(primaryStage,  menu32, funcTabPane);
 
 			Tab output = new Tab("    output    ");
 			output.closableProperty().set(false);

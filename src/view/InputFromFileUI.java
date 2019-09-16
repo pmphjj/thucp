@@ -36,6 +36,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.DirectoryChooserBuilder;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.CPCGA.Patient;
+import model.CPCGA.IO;
 import model.CPMRM.ImportCPUtil;
 import model.CPMRM.StandardCPStage;
 import test.TableController;
@@ -79,8 +81,11 @@ public class InputFromFileUI {
 				RadioButton rb2 = new RadioButton("日志文件");
 				rb2.setToggleGroup(group);
 				rb2.setUserData("日志文件");
-				rb2.setSelected(true);
-				dataType = "日志文件";
+				RadioButton rb3 = new RadioButton("收费项文件");
+				rb3.setToggleGroup(group);
+				rb3.setUserData("收费项文件");
+				rb3.setSelected(true);
+				dataType = "收费项文件";
 				group.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
 				    public void changed(ObservableValue<? extends Toggle> ov,Toggle old_toggle, Toggle new_toggle) {
 				            if(group.getSelectedToggle() != null) {
@@ -91,6 +96,7 @@ public class InputFromFileUI {
 
 				grid.add(rb1, 0, 0);
 				grid.add(rb2, 1, 0);
+				grid.add(rb3, 2, 0);
 
 				dialog.getDialogPane().setContent(grid);
 //				Platform.runLater(() -> KofKmeans.requestFocus());
@@ -104,26 +110,36 @@ public class InputFromFileUI {
 						System.out.println("没有选择CP文件");
 						return;
 					}
-						InputData fileData = new InputData();
-						FrameworkMain.indexInputData++;
-						String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
-						fileData.setKey(key);
-						ImportCPUtil imcp = new ImportCPUtil();
-						StandardCPStage[] CPS;
-						try {
-							CPS = imcp.readJsonInput(file.getAbsolutePath());
-							fileData.setDataForCP(CPS);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						fileData.setType("stdClinicalPathway");
-						FrameworkMain.inputDataSet.put(key, fileData);
-						InputTableController temp = loader.getController();
-						temp.setInputTabPane(inputTabPane);
-						temp.showInputTable(temp.getInputDataSet());
+					String file_path = file.getAbsolutePath();
+					String[] listsStrings = file_path.split("\\\\");
+					String file_name = "";
+					for (String string : listsStrings) {
+						file_name = string;
+					}
+					listsStrings = file_name.split("\\.");
+					file_name = listsStrings[0];
+					InputData fileData = new InputData();
+					fileData.setName(file_name);
+					FrameworkMain.indexInputData++;
+					String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
+					fileData.setKey(key);
+					ImportCPUtil imcp = new ImportCPUtil();
+					StandardCPStage[] CPS;
+					try {
+						CPS = imcp.readJsonInput(file.getAbsolutePath());
+						fileData.setDataForCP(CPS);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					fileData.setType("stdClinicalPathway");
+					FrameworkMain.inputDataSet.put(key, fileData);
+					InputTableController temp = loader.getController();
+					temp.setInputTabPane(inputTabPane);
+					temp.showInputTable(temp.getInputDataSet());
 
-				} else if(dataType.equals("日志文件")) {
+				}
+				else if(dataType.equals("日志文件")) {
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("选择文件");
 					File file = fileChooser.showOpenDialog(stage);
@@ -133,7 +149,16 @@ public class InputFromFileUI {
 							System.out.println("没有选择LOG文件");
 							return;
 						}
+						String file_path = file.getAbsolutePath();
+						String[] listsStrings = file_path.split("\\\\");
+						String file_name = "";
+						for (String string : listsStrings) {
+							file_name = string;
+						}
+						listsStrings = file_name.split("\\.");
+						file_name = listsStrings[0];
 						InputData fileData = new InputData();
+						fileData.setName(file_name);
 						FrameworkMain.indexInputData++;
 						String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
 						fileData.setKey(key);
@@ -201,6 +226,52 @@ public class InputFromFileUI {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
+				}
+				else if (dataType.equals("收费项文件")) {
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("选择文件");
+					File file = fileChooser.showOpenDialog(stage);
+					// System.out.println(file.getAbsolutePath());
+					try {
+						if(file == null) {
+							System.out.println("没有选择收费项文件");
+							return;
+						}
+						String file_path = file.getAbsolutePath();
+						String[] listsStrings = file_path.split("\\\\");
+						String file_name = "";
+						for (String string : listsStrings) {
+							file_name = string;
+						}
+						listsStrings = file_name.split("\\.");
+						file_name = listsStrings[0];
+						InputData fileData = new InputData();
+						fileData.setName(file_name);
+						FrameworkMain.indexInputData++;
+						String key = FrameworkMain.indexInputData.toString() + "-" + file.getAbsolutePath();
+						fileData.setKey(key);
+						BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+						fileData.dataForPatients = fileData.cpcgaIO.readCSV(file.getAbsolutePath());
+						fileData.iTosMap = fileData.cpcgaIO.getIToCMap();
+//						for(Map.Entry<String, Integer> entry:columName2index.entrySet()){
+//							System.out.println(entry.getKey()+":"+entry.getValue());
+//						}
+
+						fileData.setType("orders");
+						FrameworkMain.inputDataSet.put(key, fileData);
+						InputTableController temp = loader.getController();
+						temp.setInputTabPane(inputTabPane);
+						temp.showInputTable(temp.getInputDataSet());
+
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 
 				}
 			}
